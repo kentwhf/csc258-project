@@ -1,7 +1,7 @@
 .data
 displayAddress: .word 0x10008000
-enemy_color: 	.word 0x00ffffff
-jet_color: 	.word 0x0000ff
+obstacle: 	.word 0x0000ff
+jet_color: 	.word 0xff0000
 black: 		.word 0x00000000
 str: 		.asciiz "Hello World"
 
@@ -9,7 +9,7 @@ str: 		.asciiz "Hello World"
 .text
 lw $t0, displayAddress 		# $t0 stores the base address for display
 lw $t1, jet_color		# $t1 stores the jet_color code
-lw $t2, enemy_color 		# $t2 stores the enemy_color code
+lw $t2, obstacle		# $t2 stores the obstacle code
 lw $t3, black			# $t3 stores the background color code
 
 addi $t4, $t0, 3776	# initial position of head
