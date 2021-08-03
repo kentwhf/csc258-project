@@ -1,4 +1,4 @@
-#obstacles
+# obstacles
 
 .data
     displayAddress: 	.word 0x10008000
@@ -18,17 +18,14 @@
 	addi $t8, $zero, 4		# To operate on X
 	addi $t9, $zero, 128		# To operate on Y
 
-
 Main: 
 	j Start
-	
-
 
 Start:
-	# move stack pointer a work and push ra onto it
+    	# move stack pointer a work and push ra onto it
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
-	
+
 	add $s0, $t4, 0
     	lw $s0, ($s0)        # 1st obstacle
     	jal Obstacle
@@ -44,16 +41,11 @@ Start:
     	jal Obstacle
     	add $s2, $v0, 0
     	
-    	
     	j Drop
 	
 
 # Init a single obstacle
 Obstacle:		
-	# move stack pointer a work and push ra onto it
-	addi $sp, $sp, -4
-	sw $ra, 0($sp)
-
 	li $v0, 42		 
 	li $a0, 0
 	li $a1, 31
@@ -69,21 +61,26 @@ Obstacle:
 	sw $t2, 128($v0)	 # paint 8(t4) the platformscolor code
 	sw $t2, 132($v0)	 # paint 12(t4) the platformscolor code
 	
-	# pop a word off the stack and move the stack pointer
-	lw $ra, 0($sp)
-	addi $sp, $sp, 4
-
 	jr $ra
+	
+
+check_redraw_0:	
+	jal Obstacle
+    	add $s0, $v0, 0
+
+check_redraw_1:	
+	jal Obstacle
+    	add $s1, $v0, 0	
+    	
+check_redraw_2:			
+	jal Obstacle
+    	add $s2, $v0, 0	
 
 Drop:	
-	# move stack pointer a work and push ra onto it
-	addi $sp, $sp, -4
-	sw $ra, 0($sp)
-
 	add $t7, $t0, 4096	
-	bgt $s1, $t7, Obstacle	
-	bgt $s2, $t7, Obstacle	
-	bgt $s3, $t7, Obstacle		
+	bgt $s0, $t7, check_redraw_0	
+	bgt $s1, $t7, check_redraw_1	
+	bgt $s2, $t7, check_redraw_2		
 	
 	# 1st 
 	# Erase the previous
@@ -91,10 +88,6 @@ Drop:
 	sw $t3, 4($s2)		 
 	sw $t3, 128($s2)	 
 	sw $t3, 132($s2)
-	
-	li $v0, 32		
-	li $a0, 100
-	syscall
 
 	add $s2, $s2, 128
 	sw $t2, 0($s2)		 
@@ -108,10 +101,6 @@ Drop:
 	sw $t3, 4($s1)		 
 	sw $t3, 128($s1)	 
 	sw $t3, 132($s1)
-	
-	li $v0, 32		
-	li $a0, 100
-	syscall
 
 	add $s1, $s1, 128
 	sw $t2, 0($s1)		 
@@ -126,19 +115,16 @@ Drop:
 	sw $t3, 128($s0)	 
 	sw $t3, 132($s0)
 	
-	li $v0, 32		
-	li $a0, 100
-	syscall
-
 	add $s0, $s0, 128
 	sw $t2, 0($s0)		 
 	sw $t2, 4($s0)		 
 	sw $t2, 128($s0)	 
 	sw $t2, 132($s0)
 	
-	# pop a word off the stack and move the stack pointer
-	lw $ra, 0($sp)
-	addi $sp, $sp, 4
+	# delay	
+	li $v0, 32		
+	li $a0, 100
+	syscall
 	
 	j Drop
 	
