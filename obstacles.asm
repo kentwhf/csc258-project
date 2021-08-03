@@ -1,71 +1,147 @@
 #obstacles
 
 .data
-displayAddress: .word 0x10008000
-enemy_color: 	.word 0x00ffffff
-jet_color: 	.word 0x0000ff
-black: 		.word 0x00000000
-
+    displayAddress: 	.word 0x10008000
+    enemy_color: 	.word 0x00ffffff
+    jet_color: 		.word 0x0000ff
+    black: 		.word 0x00000000
+    obstacles:    	.word 0:3
 
 .text
 	lw $t0, displayAddress 		# $t0 stores the base address for display
 	lw $t1, jet_color		# $t1 stores the jet_color code
 	lw $t2, enemy_color 		# $t2 stores the enemy_color code
-	lw $t3, black
+	lw $t3, black			# $t3 stores the background color code
+    	la $t4, obstacles
+
 	li $s4, 32 			# Store the Upper bond of Y
+	addi $t8, $zero, 4		# To operate on X
 	addi $t9, $zero, 128		# To operate on Y
-	addi $t7, $zero, 4		# To operate on X
-Obstacle:				# $t3 stores the background color code
-	li $v0, 42		 
-	li $a0, 30
-	li $a1, 32
-	syscall 		 # randomly generate a number $a0 between 0 and 28
+
+
+Main: 
+	j Start
 	
-	addu $s0, $a0, $zero	# $s0=x
+
+
+Start:
+	# move stack pointer a work and push ra onto it
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
 	
+	add $s0, $t4, 0
+    	lw $s0, ($s0)        # 1st obstacle
+    	jal Obstacle
+    	add $s0, $v0, 0
+
+	add $s1, $t4, 4
+    	lw $s1, ($s1)        # 2nd obstacle
+    	jal Obstacle
+    	add $s1, $v0, 0
+
+    	add $s2, $t4, 8
+    	lw $s2, ($s2)        # 3rd obstacle
+    	jal Obstacle
+    	add $s2, $v0, 0
+    	
+    	
+    	j Drop
+	
+
+# Init a single obstacle
+Obstacle:		
+	# move stack pointer a work and push ra onto it
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+
 	li $v0, 42		 
-	li $a0,0
-	li $a1, 3
+	li $a0, 0
+	li $a1, 31
 	syscall
 	
-	addu $s1, $a0, $zero	# $s1=y
-	addu $s2, $a0, $0 # Record the index of Y
+	addu $t5, $a0, $zero	# x-index
+	mul $t5, $t8, $t5	# deal x
+	addu $v0, $t5, $0	
+	addu $v0, $t0, $t5	# the point
 	
-		 # $t789 stores
-	#addi $t8, $zero, 31
+	sw $t2, 0($v0)		 # paint 0(t4) the platformscolor code
+	sw $t2, 4($v0)		 # paint 4(t4) the platformscolor code
+	sw $t2, 128($v0)	 # paint 8(t4) the platformscolor code
+	sw $t2, 132($v0)	 # paint 12(t4) the platformscolor code
 	
-	#subu $s1, $t8, $s1
-	mul $s1, $t9, $s1	# deal y
-	mul $s0, $t7, $s0	# deal x
-	addu $t5, $s0, $s1	
-	addu $t5, $t0, $t5	# the point
-	
-	sw $t2, 0($t5)		 # paint 0(t4) the platformscolor code
-	sw $t2, 4($t5)		 # paint 4(t4) the platformscolor code
-	sw $t2, 128($t5)	 # paint 8(t4) the platformscolor code
-	sw $t2, 132($t5)	 # paint 12(t4) the platformscolor code
+	# pop a word off the stack and move the stack pointer
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
 
-Drop:   bgt $s2, $s4, Obstacle
-	addi $t6, $t5, 0 # Record the previous location
-	addi $s2, $s2, 1
-	mul $s1, $s2, $t9
-	addu $t5, $s0, $s1	
-	addu $t5, $t0, $t5
+	jr $ra
+
+Drop:	
+	# move stack pointer a work and push ra onto it
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+
+	add $t7, $t0, 4096	
+	bgt $s1, $t7, Obstacle	
+	bgt $s2, $t7, Obstacle	
+	bgt $s3, $t7, Obstacle		
 	
-	sw $t2, 0($t5)		 # paint 0(t4) the platformscolor code
-	sw $t2, 4($t5)		 # paint 4(t4) the platformscolor code
-	sw $t2, 128($t5)	 # paint 8(t4) the platformscolor code
-	sw $t2, 132($t5)
-	
+	# 1st 
 	# Erase the previous
-     	sw $t3, 0($t6)		 
-	sw $t3, 4($t6)		 
-	sw $t3, 128($t6)	 
-	sw $t3, 132($t6)
+     	sw $t3, 0($s2)		 
+	sw $t3, 4($s2)		 
+	sw $t3, 128($s2)	 
+	sw $t3, 132($s2)
 	
 	li $v0, 32		
-	li $a0, 500
+	li $a0, 100
 	syscall
+
+	add $s2, $s2, 128
+	sw $t2, 0($s2)		 
+	sw $t2, 4($s2)		 
+	sw $t2, 128($s2)	 
+	sw $t2, 132($s2)
+	
+	# 2nd
+	# Erase the previous
+     	sw $t3, 0($s1)		 
+	sw $t3, 4($s1)		 
+	sw $t3, 128($s1)	 
+	sw $t3, 132($s1)
+	
+	li $v0, 32		
+	li $a0, 100
+	syscall
+
+	add $s1, $s1, 128
+	sw $t2, 0($s1)		 
+	sw $t2, 4($s1)		 
+	sw $t2, 128($s1)	 
+	sw $t2, 132($s1)
+	
+	# 3rd
+	# Erase the previous
+     	sw $t3, 0($s0)		 
+	sw $t3, 4($s0)		 
+	sw $t3, 128($s0)	 
+	sw $t3, 132($s0)
+	
+	li $v0, 32		
+	li $a0, 100
+	syscall
+
+	add $s0, $s0, 128
+	sw $t2, 0($s0)		 
+	sw $t2, 4($s0)		 
+	sw $t2, 128($s0)	 
+	sw $t2, 132($s0)
+	
+	# pop a word off the stack and move the stack pointer
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
 	
 	j Drop
+	
+
+
 	
