@@ -3,7 +3,7 @@
 .data
     displayAddress: 	.word 0x10008000
     enemy_color: 	.word 0x00ffffff
-    jet_color: 		.word 0x0000ff
+    jet_color: 		.word 0xff0000
     black: 		.word 0x00000000
     obstacles:    	.word 0:3
     str: 		.asciiz "Hello World"
@@ -44,7 +44,7 @@ Start:
 
 # Init a single obstacle
 Obstacle:		
-	# move stack pointer a work and push ra onto it
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
@@ -64,14 +64,14 @@ Obstacle:
 	sw $t2, 128($v0)	 # paint 8(t4) the platformscolor code
 	sw $t2, 132($v0)	 # paint 12(t4) the platformscolor code
 	
-	# pop a word off the stack and move the stack pointer
+	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
 
 # Init a single plane
 SPACESHIP:
-	# move stack pointer a work and push ra onto it
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
@@ -83,13 +83,13 @@ SPACESHIP:
 	sw $t1, 256($t5)
 	sw $t1, 264($t5)
 	
-	# pop a word off the stack and move the stack pointer
+	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
 
 redraw_obstacles:
-	# move stack pointer a work and push ra onto it
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
@@ -97,46 +97,46 @@ redraw_obstacles:
 	bge $s1, $t7, check_redraw_1	
 	bge $s2, $t7, check_redraw_2	
 	
-	# pop a word off the stack and move the stack pointer
+	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
 	
 check_redraw_0:	
-	# move stack pointer a work and push ra onto it
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
 	jal Obstacle
    	add $s0, $v0, 0
 	
-	# pop a word off the stack and move the stack pointer
+	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
 	
 check_redraw_1:	
-	# move stack pointer a work and push ra onto it
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
 	jal Obstacle
     	add $s1, $v0, 0	
 	
-	# pop a word off the stack and move the stack pointer
+	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
 		
 check_redraw_2:		
-	# move stack pointer a work and push ra onto it
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 		
 	jal Obstacle
     	add $s2, $v0, 0	
 	
-	# pop a word off the stack and move the stack pointer
+	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
@@ -178,7 +178,7 @@ LOOP:
 	j LOOP
 
 keypress_happened:
-	# move stack pointer a work and push ra onto it
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
@@ -187,12 +187,12 @@ keypress_happened:
 	beq $t8, 0x77, respond_to_w
 	beq $t8, 0x1b, respond_to_space
 	
-	# pop a word off the stack and move the stack pointer
+	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 
 respond_to_space:
-	# move stack pointer a work and push ra onto it
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
@@ -200,28 +200,29 @@ respond_to_space:
 	jal erase_obstacles
 	j GAMEOVER
 	
-	# pop a word off the stack and move the stack pointer
+	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
 	
 respond_to_p:
-	# move stack pointer a work and push ra onto it
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
 	jal erase_plane
 	jal erase_obstacles
+	addi $t5, $t0, 3776	# initial position of plane head
 	j Main
 
-	# pop a word off the stack and move the stack pointer
+	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
 	
 	
 respond_to_w:
-	# move stack pointer a work and push ra onto it
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
@@ -229,14 +230,14 @@ respond_to_w:
 	subi $t5, $t5, 128	# move head
 	jal SPACESHIP
 	
-	# pop a word off the stack and move the stack pointer
+	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
 	
 
 erase_plane:
-	# move stack pointer a work and push ra onto it
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
@@ -253,13 +254,13 @@ erase_plane:
 	sw $t3, 256($t5)
 	sw $t3, 264($t5)
 	
-	# pop a word off the stack and move the stack pointer
+	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
 
 erase_obstacles:
-	# move stack pointer a work and push ra onto it
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
@@ -285,7 +286,7 @@ erase_obstacles:
 	sw $t3, 128($s2)	 
 	sw $t3, 132($s2)
 	
-	# pop a word off the stack and move the stack pointer
+	# pop 
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
