@@ -32,8 +32,8 @@
 
 .data
     displayAddress: 	.word 0x10008000
-    enemy_color: 	.word 0x00ffffff
-    jet_color: 		.word 0xff0000
+    enemy_color: 	.word 0xff0000
+    jet_color: 		.word 0x0000ff
     black: 		.word 0x00000000
     obstacles:    	.word 0:3
     str: 		.asciiz "Hello World"
@@ -44,7 +44,7 @@
 	lw $t2, enemy_color 		# $t2 stores the enemy_color code
 	lw $t3, black			# $t3 stores the background color code
     	la $t4, obstacles		# $t4 stores the address of obstacles
-	addi $t5, $t0, 3776		# initial position of plane head
+	addi $t5, $t0, 3520		# initial position of plane head
 
 Main: 
 	j Start
@@ -106,12 +106,25 @@ SPACESHIP:
 	sw $ra, 0($sp)
 
 	sw $t1, 0($t5)		# paint the jet
+	# sw $t1, 116($t5)
+	sw $t1, 120($t5)
 	sw $t1, 124($t5)
 	sw $t1, 128($t5)
 	sw $t1, 132($t5)
-	sw $t1, 248($t5)
+	sw $t1, 136($t5)
+	# sw $t1, 140($t5)
+	
+	# sw $t1, 248($t5)
+	sw $t1, 252($t5)
 	sw $t1, 256($t5)
-	sw $t1, 264($t5)
+	sw $t1, 260($t5)
+	# sw $t1, 264($t5)
+	
+	sw $t1, 384($t5)
+	
+	sw $t1, 508($t5)
+	sw $t1, 512($t5)
+	sw $t1, 516($t5)
 	
 	# pop
 	lw $ra, 0($sp)
@@ -275,14 +288,19 @@ erase_plane:
 	li $a0, 300   # Wait one second (1000 milliseconds)
 	syscall
 
-	# Erase plane 
-	sw $t3, 0($t5)	
+	sw $t3, 0($t5)		# paint the jet
+	sw $t3, 120($t5)
 	sw $t3, 124($t5)
 	sw $t3, 128($t5)
 	sw $t3, 132($t5)
-	sw $t3, 248($t5)
+	sw $t3, 136($t5)
+	sw $t3, 252($t5)
 	sw $t3, 256($t5)
-	sw $t3, 264($t5)
+	sw $t3, 260($t5)
+	sw $t3, 384($t5)
+	sw $t3, 508($t5)
+	sw $t3, 512($t5)
+	sw $t3, 516($t5)
 	
 	# pop
 	lw $ra, 0($sp)
