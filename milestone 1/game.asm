@@ -255,7 +255,7 @@ respond_to_p:
 	
 	jal erase_plane
 	jal erase_obstacles
-	addi $t5, $t0, 3776	# initial position of plane head
+	addi $t5, $t0, 3520	# initial position of plane head
 	j Main
 
 	# pop
