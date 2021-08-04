@@ -1,9 +1,9 @@
- CSC258 Summer 2021 Assembly Final Project
+# CSC258 Summer 2021 Assembly Final Project
 # University of Toronto
 #
 # Student: Mingxuan Teng, 1004070952, tengmin1
+#	  Huifeng Wu, 1003802753, wuhuifen
 
-#	  Huifeng Wu, 1003802753
 # Bitmap Display Configuration:
 # - Unit width in pixels: 8 (update this as needed)
 # - Unit height in pixels: 8 (update this as needed)
