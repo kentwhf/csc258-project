@@ -22,10 +22,6 @@ Main:
 	j Start
 
 Start:
-    	# move stack pointer a work and push ra onto it
-	addi $sp, $sp, -4
-	sw $ra, 0($sp)
-
 	add $s0, $t4, 0
     	lw $s0, ($s0)        # 1st obstacle
     	jal Obstacle
@@ -62,27 +58,57 @@ Obstacle:
 	sw $t2, 132($v0)	 # paint 12(t4) the platformscolor code
 	
 	jr $ra
+
+Redraw:
+	bge $s0, $t7, check_redraw_0	
+	bge $s1, $t7, check_redraw_1	
+	bge $s2, $t7, check_redraw_2	
+	jr $ra
 	
+	check_redraw_0:	
+		jal Obstacle
+    		add $s0, $v0, 0
 
-check_redraw_0:	
-	jal Obstacle
-    	add $s0, $v0, 0
-
-check_redraw_1:	
-	jal Obstacle
-    	add $s1, $v0, 0	
+	check_redraw_1:	
+		jal Obstacle
+    		add $s1, $v0, 0	
     	
-check_redraw_2:			
-	jal Obstacle
-    	add $s2, $v0, 0	
-
+	check_redraw_2:			
+		jal Obstacle
+    		add $s2, $v0, 0	
+   	
+    
 Drop:	
 	add $t7, $t0, 4096	
-	bgt $s0, $t7, check_redraw_0	
-	bgt $s1, $t7, check_redraw_1	
-	bgt $s2, $t7, check_redraw_2		
+	jal Redraw
+		
+	# 1st
+	# Erase the previous
+     	sw $t3, 0($s0)		 
+	sw $t3, 4($s0)		 
+	sw $t3, 128($s0)	 
+	sw $t3, 132($s0)
+		
+	add $s0, $s0, 128
+	sw $t2, 0($s0)		 
+	sw $t2, 4($s0)		 
+	sw $t2, 128($s0)	 
+	sw $t2, 132($s0)
 	
-	# 1st 
+	# 2nd
+	# Erase the previous
+	sw $t3, 0($s1)		 
+	sw $t3, 4($s1)		 
+	sw $t3, 128($s1)	 
+	sw $t3, 132($s1)
+	
+	add $s1, $s1, 128
+	sw $t2, 0($s1)		 
+	sw $t2, 4($s1)		 
+	sw $t2, 128($s1)	 
+	sw $t2, 132($s1)
+	
+	# 3rd
 	# Erase the previous
      	sw $t3, 0($s2)		 
 	sw $t3, 4($s2)		 
@@ -95,36 +121,6 @@ Drop:
 	sw $t2, 128($s2)	 
 	sw $t2, 132($s2)
 	
-	# 2nd
-	# Erase the previous
-     	sw $t3, 0($s1)		 
-	sw $t3, 4($s1)		 
-	sw $t3, 128($s1)	 
-	sw $t3, 132($s1)
-
-	add $s1, $s1, 128
-	sw $t2, 0($s1)		 
-	sw $t2, 4($s1)		 
-	sw $t2, 128($s1)	 
-	sw $t2, 132($s1)
-	
-	# 3rd
-	# Erase the previous
-     	sw $t3, 0($s0)		 
-	sw $t3, 4($s0)		 
-	sw $t3, 128($s0)	 
-	sw $t3, 132($s0)
-	
-	add $s0, $s0, 128
-	sw $t2, 0($s0)		 
-	sw $t2, 4($s0)		 
-	sw $t2, 128($s0)	 
-	sw $t2, 132($s0)
-	
-	# delay	
-	li $v0, 32		
-	li $a0, 100
-	syscall
 	
 	j Drop
 	
