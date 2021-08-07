@@ -23,18 +23,15 @@ Start:
 	jal SPACESHIP
 	
 	# obstacles setup
-	add $s0, $t4, 0
-    	lw $s0, ($s0)        # 1st obstacle
+    	lw $s0, 0($t4)        # 1st obstacle
     	jal Obstacle
     	add $s0, $v0, 0
 
-	add $s1, $t4, 4
-    	lw $s1, ($s1)        # 2nd obstacle
+    	lw $s1, 0($t4)        # 2nd obstacle
     	jal Obstacle
     	add $s1, $v0, 0
 
-    	add $s2, $t4, 8
-    	lw $s2, ($s2)        # 3rd obstacle
+    	lw $s2, 0($t4)        # 3rd obstacle
     	jal Obstacle
     	add $s2, $v0, 0
     	    	
@@ -52,16 +49,16 @@ Obstacle:
 	li $a1, 31
 	syscall
 	
-	addu $t7, $a0, $zero	# x-index
 	li $t6, 4
-	mul $t7, $t6, $t7	# deal x
-	addu $v0, $t5, $0	
-	addu $v0, $t0, $t7	# the point
+	mul $a0, $t6, $a0	# deal x
+	addu $v0, $t0, $a0	# the point
 	
 	sw $t2, 0($v0)		 # paint 0(t4) the platformscolor code
 	sw $t2, 4($v0)		 # paint 4(t4) the platformscolor code
 	sw $t2, 128($v0)	 # paint 8(t4) the platformscolor code
 	sw $t2, 132($v0)	 # paint 12(t4) the platformscolor code
+	
+	add $a2, $zero, $v0
 	
 	# pop
 	lw $ra, 0($sp)
@@ -75,19 +72,16 @@ SPACESHIP:
 	sw $ra, 0($sp)
 
 	sw $t1, 0($t5)		# paint the jet
-	# sw $t1, 116($t5)
+
 	sw $t1, 120($t5)
 	sw $t1, 124($t5)
 	sw $t1, 128($t5)
 	sw $t1, 132($t5)
 	sw $t1, 136($t5)
-	# sw $t1, 140($t5)
 	
-	# sw $t1, 248($t5)
 	sw $t1, 252($t5)
 	sw $t1, 256($t5)
 	sw $t1, 260($t5)
-	# sw $t1, 264($t5)
 	
 	sw $t1, 384($t5)
 	
@@ -100,21 +94,22 @@ SPACESHIP:
 	addi $sp, $sp, 4
 	jr $ra
 
-redraw_obstacles:
+check_redraw_obstacles:
 	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
+	add $t7, $t0, 4096	
 
-	bge $s0, $t7, check_redraw_0	
-	bge $s1, $t7, check_redraw_1	
-	bge $s2, $t7, check_redraw_2	
+	bge $s0, $t7, redraw_0	
+	bge $s1, $t7, redraw_1	
+	bge $s2, $t7, redraw_2	
 	
 	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
 	
-check_redraw_0:	
+redraw_0:	
 	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
@@ -127,7 +122,7 @@ check_redraw_0:
 	addi $sp, $sp, 4
 	jr $ra
 	
-check_redraw_1:	
+redraw_1:	
 	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
@@ -140,7 +135,7 @@ check_redraw_1:
 	addi $sp, $sp, 4
 	jr $ra
 		
-check_redraw_2:		
+redraw_2:		
 	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
@@ -155,8 +150,7 @@ check_redraw_2:
    	
    	
 LOOP:	
-	add $t7, $t0, 4096	
-	jal redraw_obstacles
+	jal check_redraw_obstacles
 	jal erase_obstacles
 
 	# Keyboard 
@@ -186,7 +180,16 @@ LOOP:
 	sw $t2, 4($s2)		 
 	sw $t2, 128($s2)	 
 	sw $t2, 132($s2)
+	
+	jal SPACESHIP
 		
+	add $a0, $s0, $zero
+	jal detect_collision
+	add $a0, $s1, $zero
+	jal detect_collision
+	add $a0, $s2, $zero
+	jal detect_collision
+	
 	j LOOP
 
 keypress_happened:
@@ -263,6 +266,7 @@ respond_to_s:
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
+	
 respond_to_d:
 	# push
 	addi $sp, $sp, -4
@@ -297,7 +301,7 @@ erase_plane:
 	sw $ra, 0($sp)
 	
 	li $v0, 32
-	li $a0, 300   # Wait one second (1000 milliseconds)
+	li $a0, 20   # Wait one second (1000 milliseconds)
 	syscall
 
 	sw $t3, 0($t5)		# paint the jet
@@ -325,28 +329,70 @@ erase_obstacles:
 	sw $ra, 0($sp)
 
 	li $v0, 32
-	li $a0, 300   # Wait one second (1000 milliseconds)
+	li $a0, 20   # Wait one second (1000 milliseconds)
 	syscall
 
 	# Erase the previous
-     	sw $t3, 0($s0)		 
-	sw $t3, 4($s0)		 
-	sw $t3, 128($s0)	 
-	sw $t3, 132($s0)
-	
-	# Erase the previous
-	sw $t3, 0($s1)		 
-	sw $t3, 4($s1)		 
-	sw $t3, 128($s1)	 
-	sw $t3, 132($s1)
-
-	# Erase the previous
-     	sw $t3, 0($s2)		 
-	sw $t3, 4($s2)		 
-	sw $t3, 128($s2)	 
-	sw $t3, 132($s2)
+	add $a0, $s0, $zero
+	jal erase_signle_obstacle
+	add $a0, $s1, $zero
+	jal erase_signle_obstacle
+	add $a0, $s2, $zero
+	jal erase_signle_obstacle
 	
 	# pop 
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
+
+erase_signle_obstacle:
+	# push
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+	
+	# Erase the previous
+     	sw $t3, 0($a0)		 
+	sw $t3, 4($a0)		 
+	sw $t3, 128($a0)	 
+	sw $t3, 132($a0)
+	
+	# pop 
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
+	
+
+detect_collision:
+	# push
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+
+	lw $t6, 0($a0)
+	beq $t6, $t1, collision
+	lw $t6, 4($a0)
+	beq $t6, $t1, collision	
+	lw $t6, 128($a0)
+	beq $t6, $t1, collision
+	lw $t6, 132($a0)
+	beq $t6, $t1, collision	
+	
+	# pop
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
+	
+collision:
+	# push
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+		
+	jal erase_signle_obstacle
+	
+	beq $a0, $s0, redraw_0	
+	beq $a0, $s1, redraw_1	
+	beq $a0, $s2, redraw_2	
+	
+	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
