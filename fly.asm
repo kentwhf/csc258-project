@@ -1,7 +1,7 @@
 .data
 displayAddress: .word 0x10008000
-obstacle: 	.word 0x0000ff
-jet_color: 	.word 0xff0000
+obstacle: 	.word 0xff0000
+jet_color: 	.word 0x0000ff
 black: 		.word 0x00000000
 str: 		.asciiz "Hello World"
 
