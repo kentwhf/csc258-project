@@ -4,8 +4,13 @@
     enemy_color: 	.word 0xff0000
     jet_color: 		.word 0x0000ff
     black: 		.word 0x00000000
+    yellow:		.word 0xffff00
+    white:		.word 0xffffff
     obstacles:    	.word 0:3
     str: 		.asciiz "Hello World"
+    hp: 		.word 3
+    bullets:		.word 0:3
+    bullets_location:	.word 0:3
 
 .text
 	lw $t0, displayAddress 		# $t0 stores the base address for display
@@ -14,7 +19,12 @@
 	lw $t3, black			# $t3 stores the background color code
     	la $t4, obstacles		# $t4 stores the address of obstacles
 	addi $t5, $t0, 3520		# initial position of plane head
-
+	
+	la $t6, bullets_location
+	sw $t5, 0($t6)
+	sw $t5, 4($t6)
+	sw $t5, 8($t6) 
+	 
 Main: 
 	j Start
 
@@ -34,7 +44,9 @@ Start:
     	lw $s2, 0($t4)        # 3rd obstacle
     	jal Obstacle
     	add $s2, $v0, 0
-    	    	
+    
+	jal Enemy
+	 	 
     	j LOOP
 	
 
@@ -51,7 +63,7 @@ Obstacle:
 	
 	li $t6, 4
 	mul $a0, $t6, $a0	# deal x
-	addu $v0, $t0, $a0	# the point
+	addu $v0, $t0, $a0	# the poin
 	
 	sw $t2, 0($v0)		 # paint 0(t4) the platformscolor code
 	sw $t2, 4($v0)		 # paint 4(t4) the platformscolor code
@@ -64,6 +76,32 @@ Obstacle:
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
+	
+Enemy:
+	li $v0, 42		 
+	li $a0, 0
+	li $a1, 31
+	syscall
+	
+	li $t6, 4
+	mul $a0, $t6, $a0	# deal x
+	addu $v0, $t0, $a0	# the point
+
+	# push
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+
+	sw $t1, 0($v0)
+	sw $t1, 4($v0)
+	sw $t1, 8($v0)
+	sw $t1, 132($v0)
+	
+	# pop
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
+
+
 
 # Init a single plane
 SPACESHIP:
@@ -150,6 +188,7 @@ redraw_2:
    	
    	
 LOOP:	
+	jal hp_display
 	jal check_redraw_obstacles
 	jal erase_obstacles
 
@@ -182,7 +221,36 @@ LOOP:
 	sw $t2, 132($s2)
 	
 	jal SPACESHIP
-		
+	
+	# move bullets
+	# la $t6, bullets
+	la $t8, bullets_location
+	lw $t7, 0($t6)
+	lw $t9, 0($t8)
+	jal handle_bullet
+	sw $t7, 0($t6)	
+	sw $t9, 0($t8)
+	sw $t2, 0($t9)
+	
+	# la $t6, bullets
+	la $t8, bullets_location
+	lw $t7, 4($t6)
+	lw $t9, 4($t8)
+	jal handle_bullet
+	sw $t7, 4($t6)	
+	sw $t9, 4($t8)
+	sw $t2, 0($t9)
+	
+	# la $t6, bullets
+	la $t8, bullets_location
+	lw $t7, 8($t6)
+	lw $t9, 8($t8)
+	jal handle_bullet
+	sw $t7, 8($t6)	
+	sw $t9, 8($t8)	
+	sw $t2, 0($t9)
+
+	# collision	
 	add $a0, $s0, $zero
 	jal detect_collision
 	add $a0, $s1, $zero
@@ -191,6 +259,46 @@ LOOP:
 	jal detect_collision
 	
 	j LOOP
+	
+handle_bullet:
+	# push
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)	
+	
+	beq $t7, 1, move_bullet
+	beq $t7, 0, hold_bullet
+	blt $t9, $t1, hold_bullet
+	
+	# pop
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
+	
+move_bullet:
+	# push
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)	
+	
+	sub $t9, $t9, 128
+	
+	# pop
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
+	
+hold_bullet:
+	# push
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)	
+	
+	move $t9, $t5
+	li $t7, 0
+	
+	# pop
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
+
 
 keypress_happened:
 	# push
@@ -214,9 +322,34 @@ respond_to_space:
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
-	jal erase_plane
-	jal erase_obstacles
-	j GAMEOVER
+	# jal erase_plane
+	# jal erase_obstacles
+	# j GAMEOVER
+	
+	la $t6, bullets
+	lw $t7, 0($t6)
+	beq $t7, 0, shoot
+	sw $t7, 0($t6)	
+
+	lw $t7, 4($t6)
+	beq $t7, 0, shoot
+	sw $t7, 4($t6)	
+	
+	lw $t7, 8($t6)
+	beq $t7, 0, shoot
+	sw $t7, 8($t6)
+	
+	# pop
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
+	
+shoot:
+	# push
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+	
+	li $t7, 1
 	
 	# pop
 	lw $ra, 0($sp)
@@ -385,18 +518,90 @@ collision:
 	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
-		
+	
 	jal erase_signle_obstacle
 	
 	beq $a0, $s0, redraw_0	
 	beq $a0, $s1, redraw_1	
 	beq $a0, $s2, redraw_2	
 	
+	lw $t7, hp
+	sub $t7, $t7, 1
+	sw $t7, hp	
+	
 	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
 	
+hp_display:
+	# push
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+
+	lw $t6, yellow	# initial hp counter
+	sw $t6, 0($t0)	# H
+	sw $t6, 128($t0)
+	sw $t6, 256($t0)	
+	sw $t6, 132($t0)
+	sw $t6, 8($t0)
+	sw $t6, 136($t0)
+	sw $t6, 264($t0)
+	sw $t6, 16($t0) # P
+	sw $t6, 144($t0) 
+	sw $t6, 272($t0)
+	sw $t6, 20($t0) 
+	sw $t6, 148($t0) 
+	
+	# number of lives
+	lw $t7, hp
+	addi $t9, $t0, 156
+	li $t8, 0
+	
+	sw $t3, 0($t9) 
+	sw $t3, 4($t9)
+	sw $t3, 8($t9) 
+
+	bgt $t7, 0, draw_hp_block
+	beq $t7, 0, GAMEOVER
+
+	# pop
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra	
+
+	
+draw_hp_block:	
+	# push
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)	
+
+	sw $t6, 0($t9) 
+	add $t8, $t8, 1
+	add $t9, $t9, 4
+	bne $t8, $t7, draw_hp_block
+
+	# pop
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
+
+digit_1:
+	# push
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+	
+	sw $t6, 0($a0)
+	sw $t6, 128($a0) 
+	sw $t6, 256($a0) 
+	
+	# pop
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra	
+
+
+
 GAMEOVER:
 	addi $t6, $t0, 1164
 	sw $t1, 0($t6)
