@@ -241,6 +241,8 @@ respond_to_p:
 	
 respond_to_w:
 	# push
+	sub $a2, $t5, $t0
+	ble $a2, 128, Boundary #set the upper bound
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
@@ -255,6 +257,8 @@ respond_to_w:
 	
 respond_to_s:
 	# push
+	sub $a2, $t5, $t0
+	bge $a2, 3456, Boundary #set the bottom bound
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
@@ -266,9 +270,28 @@ respond_to_s:
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
+
+Boundary:
+	li $v0, 4
+	la $a0, str
+	syscall
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+
+	jal erase_plane
+	addi $t5, $t5, 0	# move head
+	jal SPACESHIP
 	
+	# pop
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
 respond_to_d:
-	# push
+	# push3
+	addi $a2, $0, 125
+	div $t5, $a2
+	mfhi $a3
+	beq $a3, $0, Boundary
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
