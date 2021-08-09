@@ -223,7 +223,7 @@ LOOP:
 	jal SPACESHIP
 	
 	# move bullets
-	# la $t6, bullets
+	la $t6, bullets
 	la $t8, bullets_location
 	lw $t7, 0($t6)
 	lw $t9, 0($t8)
@@ -374,8 +374,6 @@ respond_to_p:
 	
 respond_to_w:
 	# push
-	sub $a2, $t5, $t0
-	ble $a2, 128, Boundary #set the upper bound
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
@@ -390,8 +388,6 @@ respond_to_w:
 	
 respond_to_s:
 	# push
-	sub $a2, $t5, $t0
-	bge $a2, 3456, Boundary #set the bottom bound
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
@@ -403,30 +399,9 @@ respond_to_s:
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
-
-Boundary:
-	li $v0, 4
-	la $a0, str
-	syscall
-	addi $sp, $sp, -4
-	sw $ra, 0($sp)
-
-	jal erase_plane
-	addi $t5, $t5, 0	# move head
-	jal SPACESHIP
 	
-	# pop
-	lw $ra, 0($sp)
-	addi $sp, $sp, 4
-	jr $ra
 respond_to_d:
-	# push3
-	sub $a2, $t5, $t0
-	addi $a1, $0, 128
-	div $a2, $a1
-	mfhi $a3
-	subi $a1, $a1, 12
-	beq $a3, $a1, Boundary
+	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
@@ -441,12 +416,6 @@ respond_to_d:
 
 respond_to_a:
 	# push
-	sub $a2, $t5, $t0
-	addi $a1, $0, 128
-	div $a2, $a1
-	mfhi $a3
-	subi $a1, $a1, 120
-	beq $a3, $a1, Boundary
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
