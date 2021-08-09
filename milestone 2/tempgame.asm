@@ -288,10 +288,12 @@ Boundary:
 	jr $ra
 respond_to_d:
 	# push3
-	addi $a2, $0, 125
-	div $t5, $a2
+	sub $a2, $t5, $t0
+	addi $a1, $0, 128
+	div $a2, $a1
 	mfhi $a3
-	beq $a3, $0, Boundary
+	subi $a1, $a1, 12
+	beq $a3, $a1, Boundary
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
@@ -306,6 +308,12 @@ respond_to_d:
 
 respond_to_a:
 	# push
+	sub $a2, $t5, $t0
+	addi $a1, $0, 128
+	div $a2, $a1
+	mfhi $a3
+	subi $a1, $a1, 120
+	beq $a3, $a1, Boundary
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
