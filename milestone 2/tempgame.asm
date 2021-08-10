@@ -61,8 +61,8 @@ Obstacle:
 	li $a1, 31
 	syscall
 	
-	li $t6, 4
-	mul $a0, $t6, $a0	# deal x
+	li $s6, 4
+	mul $a0, $s6, $a0	# deal x
 	addu $v0, $t0, $a0	# the poin
 	
 	sw $t2, 0($v0)		 # paint 0(t4) the platformscolor code
@@ -259,7 +259,6 @@ LOOP:
 	add $a0, $s2, $zero
 	jal detect_collision
 	
-	
 	j LOOP
 	
 handle_bullet:
@@ -269,6 +268,38 @@ handle_bullet:
 
 	blt $t9, $t0, hold_bullet
 	beq $t7, 0, hold_bullet
+	
+	move $a0, $s0
+	add $s3, $a0, 0
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 4
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 128
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 132
+	beq $s3, $t9, collision_2
+	
+	move $a0, $s1
+	add $s3, $a0, 0
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 4
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 128
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 132
+	beq $s3, $t9, collision_2
+	
+	move $a0, $s2
+	add $s3, $a0, 0
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 4
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 128
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 132
+	beq $s3, $t9, collision_2
+	
+			
 	beq $t7, 1, move_bullet
 	
 	# pop
@@ -433,7 +464,7 @@ erase_plane:
 	sw $ra, 0($sp)
 	
 	li $v0, 32
-	li $a0, 20   # Wait one second (1000 milliseconds)
+	li $a0, 0   # Wait one second (1000 milliseconds)
 	syscall
 
 	sw $t3, 0($t5)		# paint the jet
@@ -461,7 +492,7 @@ erase_obstacles:
 	sw $ra, 0($sp)
 
 	li $v0, 32
-	li $a0, 20   # Wait one second (1000 milliseconds)
+	li $a0, 0   # Wait one second (1000 milliseconds)
 	syscall
 
 	# Erase the previous
@@ -500,22 +531,22 @@ detect_collision:
 	sw $ra, 0($sp)
 
 	lw $s4, white
-	lw $t6, 0($a0)
-	# add $s3, $a0, 0
-	beq $t6, $t1, collision_1
-	beq $t6, $s4, collision_2
-	lw $t6, 4($a0)
-	# add $s3, $a0, 4
-	beq $t6, $s4, collision_1
-	beq $t6, $s4, collision_2
-	lw $t6, 128($a0)
-	# add $s3, $a0, 128
-	beq $t6, $t1, collision_1
-	beq $t6, $s4, collision_2
-	lw $t6, 132($a0)
-	# add $s3, $a0, 132
-	beq $t6, $t1, collision_1
-	beq $t6, $s4, collision_2	
+	lw $s6, 0($a0)
+	add $s3, $a0, 0
+	beq $s6, $t1, collision_1
+	# beq $s6, $s4, collision_2
+	lw $s6, 4($a0)
+	add $s3, $a0, 4
+	beq $s6, $t1, collision_1
+	# beq $s6, $s4, collision_2
+	lw $s6, 128($a0)
+	add $s3, $a0, 128
+	beq $s6, $t1, collision_1
+	# beq $s6, $s4, collision_2
+	lw $s6, 132($a0)
+	add $s3, $a0, 132
+	beq $s6, $t1, collision_1
+	# beq $s6, $s4, collision_2	
 	
 	# pop
 	lw $ra, 0($sp)
@@ -547,21 +578,34 @@ collision_2:
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
+	jal hold_bullet
+	
+	# la $t6, bullets
+	# la $t8, bullets_location
+	# lw $t7, 0($t6)
+	# lw $t9, 0($t8)
+	# beq $s3, $t9, hold_bullet
+	# sw $t7, 0($t6)
+	# sw $t9, 0($t8)
+	
+	# lw $t7, 4($t6)
+	# lw $t9, 4($t8)
+	# beq $s3, $t9, hold_bullet
+	# sw $t7, 4($t6)
+	# sw $t9, 4($t8)
+
+	# lw $t7, 8($t6)
+	#lw $t9, 8($t8)
+	# beq $s3, $t9, hold_bullet
+	# sw $t7, 8($t6)
+	# sw $t9, 8($t8)
+	
 	jal erase_signle_obstacle
 	
 	beq $a0, $s0, redraw_0	
 	beq $a0, $s1, redraw_1	
 	beq $a0, $s2, redraw_2	
-	
-	# la $t8, bullets_location
-	# lw $t9, 0($t8)
-	# beq $s3, $t9, hold_bullet
-	# lw $t9, 4($t8)
-	# beq $s3, $t9, hold_bullet
-	# lw $t9, 8($t8)
-	# beq $s3, $t9, hold_bullet
-	
-	
+
 	# pop
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
@@ -621,20 +665,6 @@ draw_hp_block:
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
-
-digit_1:
-	# push
-	addi $sp, $sp, -4
-	sw $ra, 0($sp)
-	
-	sw $t6, 0($a0)
-	sw $t6, 128($a0) 
-	sw $t6, 256($a0) 
-	
-	# pop
-	lw $ra, 0($sp)
-	addi $sp, $sp, 4
-	jr $ra	
 
 
 
