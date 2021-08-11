@@ -190,7 +190,6 @@ redraw_2:
 LOOP:	
 	jal hp_display
 	jal check_redraw_obstacles
-	jal erase_obstacles
 
 	# Keyboard 
 	li $t9, 0xffff0000 
@@ -198,27 +197,6 @@ LOOP:
 	
 	beq $t8, 1, keypress_happened
 	lw $t8, 0($t9)	# resume
-		
-	# 1st		
-	add $s0, $s0, 128
-	sw $t2, 0($s0)		 
-	sw $t2, 4($s0)		 
-	sw $t2, 128($s0)	 
-	sw $t2, 132($s0)
-	
-	# 2nd
-	add $s1, $s1, 128
-	sw $t2, 0($s1)		 
-	sw $t2, 4($s1)		 
-	sw $t2, 128($s1)	 
-	sw $t2, 132($s1)
-	
-	# 3rd
-	add $s2, $s2, 128
-	sw $t2, 0($s2)		 
-	sw $t2, 4($s2)		 
-	sw $t2, 128($s2)	 
-	sw $t2, 132($s2)
 	
 	lw $s4, white
 	# move bullets
@@ -248,9 +226,31 @@ LOOP:
 	sw $t7, 8($t6)	
 	sw $t9, 8($t8)	
 	sw $s4, 0($t9)
-
+	
+	jal erase_obstacles	
+	# 1st		
+	add $s0, $s0, 256
+	sw $t2, 0($s0)		 
+	sw $t2, 4($s0)		 
+	sw $t2, 128($s0)	 
+	sw $t2, 132($s0)
+	
+	# 2nd
+	add $s1, $s1, 256
+	sw $t2, 0($s1)		 
+	sw $t2, 4($s1)		 
+	sw $t2, 128($s1)	 
+	sw $t2, 132($s1)
+	
+	# 3rd
+	add $s2, $s2, 256
+	sw $t2, 0($s2)		 
+	sw $t2, 4($s2)		 
+	sw $t2, 128($s2)	 
+	sw $t2, 132($s2)
+	
 	jal SPACESHIP
-
+	
 	# collision	
 	add $a0, $s0, $zero
 	jal detect_collision
@@ -258,6 +258,7 @@ LOOP:
 	jal detect_collision
 	add $a0, $s2, $zero
 	jal detect_collision
+
 	
 	j LOOP
 	
@@ -278,6 +279,10 @@ handle_bullet:
 	beq $s3, $t9, collision_2
 	add $s3, $a0, 132
 	beq $s3, $t9, collision_2
+	add $s3, $a0, 256
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 260
+	beq $s3, $t9, collision_2
 	
 	move $a0, $s1
 	add $s3, $a0, 0
@@ -287,6 +292,10 @@ handle_bullet:
 	add $s3, $a0, 128
 	beq $s3, $t9, collision_2
 	add $s3, $a0, 132
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 256
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 260
 	beq $s3, $t9, collision_2
 	
 	move $a0, $s2
@@ -298,8 +307,11 @@ handle_bullet:
 	beq $s3, $t9, collision_2
 	add $s3, $a0, 132
 	beq $s3, $t9, collision_2
-	
-			
+	add $s3, $a0, 256
+	beq $s3, $t9, collision_2
+	add $s3, $a0, 260
+	beq $s3, $t9, collision_2
+						
 	beq $t7, 1, move_bullet
 	
 	# pop
@@ -326,7 +338,7 @@ hold_bullet:
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)	
 	
-	# sw $t3, 0($t9)
+	sw $t3, 0($t9)
 	add $t9, $t5, 0
 	li $t7, 0
 	
@@ -530,7 +542,7 @@ detect_collision:
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
-	lw $s4, white
+	# lw $s4, white
 	lw $s6, 0($a0)
 	add $s3, $a0, 0
 	beq $s6, $t1, collision_1
