@@ -228,7 +228,7 @@ LOOP:
 	sw $t2, 128($s2)	 
 	sw $t2, 132($s2)
 	
-	lw $s4, white
+	lw $s5, white
 	# move bullets
 	la $t6, bullets
 	la $t8, bullets_location
@@ -237,7 +237,7 @@ LOOP:
 	jal handle_bullet
 	sw $t7, 0($t6)	
 	sw $t9, 0($t8)
-	sw $s4, 0($t9)
+	sw $s5, 0($t9)
 	
 	# la $t6, bullets
 	# la $t8, bullets_location
@@ -246,7 +246,7 @@ LOOP:
 	jal handle_bullet
 	sw $t7, 4($t6)	
 	sw $t9, 4($t8)
-	sw $s4, 0($t9)
+	sw $s5, 0($t9)
 	
 	# la $t6, bullets
 	# la $t8, bullets_location
@@ -255,7 +255,7 @@ LOOP:
 	jal handle_bullet
 	sw $t7, 8($t6)	
 	sw $t9, 8($t8)	
-	sw $s4, 0($t9)
+	sw $s5, 0($t9)
 
 	jal SPACESHIP
 
@@ -472,7 +472,7 @@ erase_plane:
 	sw $ra, 0($sp)
 	
 	li $v0, 32
-	li $a0, 0   # Wait one second (1000 milliseconds)
+	li $a0, 100   # Wait one second (1000 milliseconds)
 	syscall
 
 	sw $t3, 0($t5)		# paint the jet
@@ -500,7 +500,7 @@ erase_obstacles:
 	sw $ra, 0($sp)
 
 	li $v0, 32
-	li $a0, 0   # Wait one second (1000 milliseconds)
+	li $a0, 100   # Wait one second (1000 milliseconds)
 	syscall
 
 	# Erase the previous
@@ -538,7 +538,7 @@ detect_collision:
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 
-	lw $s4, white
+	lw $s5, white
 	lw $s6, 0($a0)
 	add $s3, $a0, 0
 	beq $s6, $t1, collision_1
@@ -818,7 +818,7 @@ Check_second:
 #0
 First_zero:
 	
-	
+	addi $s6, $t0, 1696
 	sw $t1, 0($s6)
 	sw $t1, 4($s6)
 	sw $t1, 8($s6)
@@ -877,6 +877,7 @@ Second_zero:
 	
 #1
 First_one:
+	addi $s6, $t0, 1696
 	sw $t1, 8($s6)
 	sw $t1, 136($s6)
 	sw $t1, 264($s6)
@@ -902,6 +903,7 @@ Second_one:
 
 #2
 First_two:
+	addi $s6, $t0, 1696
 	sw $t1, 0($s6)
 	sw $t1, 4($s6)
 	sw $t1, 8($s6)
@@ -958,6 +960,7 @@ Second_two:
 
 #3
 First_three:
+	addi $s6, $t0, 1696
 	sw $t1, 0($s6)
 	sw $t1, 4($s6)
 	sw $t1, 8($s6)
@@ -1014,6 +1017,7 @@ Second_three:
 	
 #4
 First_four:
+	addi $s6, $t0, 1696
 	sw $t1, 0($s6)
 	sw $t1, 8($s6)
 	#sw $t1, 12($s6)
@@ -1079,6 +1083,7 @@ Second_four:
 	syscall
 #5	
 First_five:
+	addi $s6, $t0, 1696
 	sw $t1, 0($s6)
 	sw $t1, 4($s6)
 	sw $t1, 8($s6)
@@ -1135,6 +1140,7 @@ Second_five:
 
 #6
 First_six:
+	addi $s6, $t0, 1696
 	sw $t1, 0($s6)
 	sw $t1, 4($s6)
 	sw $t1, 8($s6)
@@ -1191,6 +1197,7 @@ Second_six:
 	
 #7
 First_seven:
+	addi $s6, $t0, 1696
 	sw $t1, 0($s6)
 	sw $t1, 4($s6)
 	sw $t1, 8($s6)
@@ -1241,6 +1248,7 @@ Second_seven:
 
 #8
 First_eight:
+	addi $s6, $t0, 1696
 	sw $t1, 0($s6)
 	sw $t1, 4($s6)
 	sw $t1, 8($s6)
@@ -1298,6 +1306,7 @@ Second_eight:
 	
 #9
 First_nine:
+	addi $s6, $t0, 1696
 	sw $t1, 0($s6)
 	sw $t1, 4($s6)
 	sw $t1, 8($s6)
