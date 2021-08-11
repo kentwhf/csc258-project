@@ -39,19 +39,22 @@ Start:
 	
 	# obstacles setup
     	lw $s0, 0($t4)        # 1st obstacle
-    	jal Obstacle
-    	add $s0, $v0, 0
+    	# jal Obstacle
+    	# add $s0, $v0, 0
 
     	lw $s1, 0($t4)        # 2nd obstacle
-    	jal Obstacle
-    	add $s1, $v0, 0
+    	# jal Obstacle
+    	# add $s1, $v0, 0
 
     	lw $s2, 0($t4)        # 3rd obstacle
-    	jal Obstacle
-    	add $s2, $v0, 0
-    
-	# jal Enemy
-	 	 
+    	# jal Obstacle
+    	# add $s2, $v0, 0
+    	move $s0, $t0
+    	move $s1, $t0
+        move $s2, $t0
+    	    	
+	jal check_overlap
+    	 	 
     	j LOOP
 	
 
@@ -89,7 +92,7 @@ SPACESHIP:
 	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
-
+	
 	sw $t1, 0($t5)		# paint the jet
 
 	sw $t1, 120($t5)
@@ -112,13 +115,58 @@ SPACESHIP:
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
+	
+check_overlap:	
+	# push
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+	
+	jal erase_obstacles
+	jal redraw_0
+	jal redraw_1
+	jal redraw_2
+	
+	add $t7, $s1, 0	
+	beq $s0, $t7, check_overlap
+	add $t7, $s1, 4
+	beq $s0, $t7, check_overlap
+
+	add $t7, $s2, 0	
+	beq $s0, $t7, check_overlap
+	add $t7, $s2, 4
+	beq $s0, $t7, check_overlap
+	
+	add $t7, $s0, 0	
+	beq $s1, $t7, check_overlap
+	add $t7, $s0, 4
+	beq $s1, $t7, check_overlap
+	
+	add $t7, $s2, 0	
+	beq $s1, $t7, check_overlap
+	add $t7, $s0, 4
+	beq $s1, $t7, check_overlap
+	
+	add $t7, $s0, 0	
+	beq $s2, $t7, check_overlap
+	add $t7, $s0, 4
+	beq $s2, $t7, check_overlap
+	
+	add $t7, $s1, 0	
+	beq $s2, $t7, check_overlap
+	add $t7, $s1, 4
+	beq $s2, $t7, check_overlap
+
+	# pop
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
 
 check_redraw_obstacles:
 	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	add $t7, $t0, 4096	
-
+	
 	bge $s0, $t7, redraw_0	
 	bge $s1, $t7, redraw_1	
 	bge $s2, $t7, redraw_2	
@@ -171,7 +219,7 @@ redraw_2:
 	jr $ra
    	
    	
-LOOP:	
+LOOP:		
 	jal hp_display
 	jal check_redraw_obstacles
 
@@ -215,8 +263,7 @@ LOOP:
 	# speed ajustment	
 	lw $s5, hp
 	beq $s5, 3, normal_speed
-	ble $s5, 2, speed_up		
-	
+	ble $s5, 2, speed_up
 	jal SPACESHIP
 		
 	# collision	
@@ -232,8 +279,8 @@ LOOP:
 
 normal_speed:	
 	# push
-	addi $sp, $sp, -4
-	sw $ra, 0($sp)	
+	# addi $sp, $sp, -4
+	# sw $ra, 0($sp)	
 
 	# 1st		
 	add $s0, $s0, 128
@@ -257,14 +304,15 @@ normal_speed:
 	sw $t2, 132($s2)
 	
 	# pop
-	lw $ra, 0($sp)
-	addi $sp, $sp, 4
+	# lw $ra, 0($sp)
+	# addi $sp, $sp, 4
+	add $ra, $ra, 28
 	jr $ra
 	
 speed_up:	
 	# push
-	addi $sp, $sp, -4
-	sw $ra, 0($sp)
+	# addi $sp, $sp, -4
+	# sw $ra, 0($sp)
 	
 	# 1st		
 	add $s0, $s0, 256
@@ -288,8 +336,9 @@ speed_up:
 	sw $t2, 132($s2)
 
 	# pop
-	lw $ra, 0($sp)
-	addi $sp, $sp, 4
+	# lw $ra, 0($sp)
+	# addi $sp, $sp, 4
+	add $ra, $ra, 28
 	jr $ra
 
 handle_bullet:
@@ -506,7 +555,7 @@ erase_plane:
 	sw $ra, 0($sp)
 	
 	li $v0, 32
-	li $a0, 0   # Wait one second (1000 milliseconds)
+	li $a0, 100   # Wait one second (1000 milliseconds)
 	syscall
 
 	sw $t3, 0($t5)		# paint the jet
@@ -534,7 +583,7 @@ erase_obstacles:
 	sw $ra, 0($sp)
 
 	li $v0, 32
-	li $a0, 0   # Wait one second (1000 milliseconds)
+	li $a0, 100   # Wait one second (1000 milliseconds)
 	syscall
 
 	# Erase the previous
