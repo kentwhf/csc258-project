@@ -23,7 +23,12 @@
 	la $t6, bullets_location
 	sw $t5, 0($t6)
 	sw $t5, 4($t6)
-	sw $t5, 8($t6) 
+	sw $t5, 8($t6)
+	
+	addi $s6, $t0, 1696             # Initial point to show the First digit score
+    	addi $s7, $t0, 1744		# Initial point to show the Second digit score
+    	addi $s4, $0, 0                 # Count the score
+    	
 	 
 Main: 
 	j Start
@@ -152,6 +157,7 @@ redraw_0:
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
+	addi $s4, $s4, 1
 	jal Obstacle
    	add $s0, $v0, 0
 	
@@ -165,6 +171,7 @@ redraw_1:
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
+	addi $s4, $s4, 1
 	jal Obstacle
     	add $s1, $v0, 0	
 	
@@ -177,7 +184,8 @@ redraw_2:
 	# push
 	addi $sp, $sp, -4
 	sw $ra, 0($sp)
-		
+	
+	addi $s4, $s4, 1	
 	jal Obstacle
     	add $s2, $v0, 0	
 	
@@ -681,165 +689,678 @@ draw_hp_block:
 
 
 GAMEOVER:
-	addi $t6, $t0, 1164
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-
-	addi $t6, $t0, 1164
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	addi $t7, $t6, 0
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-
-	addi $t6, $t7, 0
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-
+	#sw $t1, 16($t0)
+	# E
+	sw $t1, 144($t0)
+	sw $t1, 272($t0)
+	sw $t1, 400($t0)
+	sw $t1, 528($t0)
+	sw $t1, 656($t0)
+	sw $t1, 148($t0)
+	sw $t1, 152($t0)
+	sw $t1, 404($t0)
+	sw $t1, 408($t0)
+	sw $t1, 660($t0)
+	sw $t1, 664($t0)
+	
 	# N
-	addi $t6, $t0, 1196
-	addi $t7, $t6, 0
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128	
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
+	sw $t1, 168($t0)
+	sw $t1, 172($t0)
+	sw $t1, 296($t0)
+	sw $t1, 304($t0)
+	sw $t1, 424($t0)
+	sw $t1, 432($t0)
+	sw $t1, 552($t0)
+	sw $t1, 564($t0)
+	sw $t1, 680($t0)
+	sw $t1, 696($t0)
+	sw $t1, 568($t0)
+	sw $t1, 440($t0)
+	sw $t1, 312($t0)
+	sw $t1, 184($t0)
+	
+	#D
+	sw $t1, 196($t0)
+	sw $t1, 324($t0)
+	sw $t1, 452($t0)
+	sw $t1, 580($t0)
+	sw $t1, 708($t0)
+	sw $t1, 200($t0)
+	sw $t1, 332($t0)
+	sw $t1, 464($t0)
+	sw $t1, 588($t0)
+	sw $t1, 712($t0)
 
-	addi $t6, $t7, 0
-	addi $t6, $t6, 4	
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
+	#Score
+	#S
+	sw $t2, 1040($t0)
+	sw $t2, 904($t0)
+	sw $t2, 908($t0)
+	sw $t2, 1028($t0)
+	sw $t2, 1160($t0)
+	sw $t2, 1292($t0)
+	sw $t2, 1424($t0)
+	sw $t2, 1548($t0)
+	sw $t2, 1544($t0)
+	sw $t2, 1412($t0)
+	
+	#sw $t2, 1060($t0)
+	#C
+	sw $t2, 924($t0)
+	sw $t2, 928($t0)
+	sw $t2, 1048($t0)
+	sw $t2, 1176($t0)
+	sw $t2, 1304($t0)
+	sw $t2, 1436($t0)
+	sw $t2, 1440($t0)
+	#sw $t2, 1316($t0)
+	
+	#O
+	sw $t2, 940($t0)
+	sw $t2, 944($t0)
+	sw $t2, 1064($t0)
+	sw $t2, 1192($t0)
+	sw $t2, 1076($t0)
+	sw $t2, 1204($t0)
+	sw $t2, 1332($t0)
+	sw $t2, 1320($t0)
+	sw $t2, 1456($t0)
+	sw $t2, 1452($t0)
+	
+	#r
+	sw $t2, 956($t0)
+	sw $t2, 1084($t0)
+	sw $t2, 1212($t0)
+	sw $t2, 1340($t0)
+	sw $t2, 1468($t0)
+	sw $t2, 1216($t0)
+	sw $t2, 1092($t0)
+	sw $t2, 968($t0)
+	
+	#e
+	sw $t2, 976($t0)
+	sw $t2, 1104($t0)
+	sw $t2, 1232($t0)
+	sw $t2, 1360($t0)
+	sw $t2, 1488($t0)
+	sw $t2, 980($t0)
+	sw $t2, 984($t0)
+	sw $t2, 1236($t0)
+	sw $t2, 1240($t0)
+	sw $t2, 1492($t0)
+	sw $t2, 1496($t0)
+	
+	jal Check_first
 
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	subi $t6, $t6, 128
-	sw $t1, 0($t6)
-	subi $t6, $t6, 128
-	sw $t1, 0($t6)
-	subi $t6, $t6, 128
-	sw $t1, 0($t6)
-	subi $t6, $t6, 128
-	sw $t1, 0($t6)
-	subi $t6, $t6, 128
-	sw $t1, 0($t6)
-	subi $t6, $t6, 128
-	sw $t1, 0($t6)
-	subi $t6, $t6, 128
-	sw $t1, 0($t6)
-	subi $t6, $t6, 128
-	sw $t1, 0($t6)
 
-	# D
-	addi $t6, $t0, 1236
-	sw $t1, 0($t6)
-	addi $t7, $t6, 0
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
+Check_first:
+	addi $t8, $0, 10
+	div $s4, $t8
+	
+	mflo $t9
+	
+	beq $t9, 0, First_zero
+	beq $t9, 1, First_one
+	beq $t9, 2, First_two
+	beq $t9, 3, First_three
+	beq $t9, 4, First_four
+	beq $t9, 5, First_five
+	beq $t9, 6, First_six
+	beq $t9, 7, First_seven
+	beq $t9, 8, First_eight
+	beq $t9, 9, First_nine
+	
+Check_second:
 
-	addi $t6, $t7, 0
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	addi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	subi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	subi $t6, $t6, 4
-	sw $t1, 0($t6)
-	addi $t6, $t6, 128
-	subi $t6, $t6, 4
-	sw $t1, 0($t6)
-	subi $t6, $t6, 4
-	sw $t1, 0($t6)
+	addi $t8, $0, 10
+	div $s4, $t8
+	mfhi $t9
+	
+	beq $t9, 0, Second_zero
+	beq $t9, 1, Second_one
+	beq $t9, 2, Second_two
+	beq $t9, 3, Second_three
+	beq $t9, 4, Second_four
+	beq $t9, 5, Second_five
+	beq $t9, 6, Second_six
+	beq $t9, 7, Second_seven
+	beq $t9, 8, Second_eight
+	beq $t9, 9, Second_nine
+	
+#0
+First_zero:
+	
+	
+	sw $t1, 0($s6)
+	sw $t1, 4($s6)
+	sw $t1, 8($s6)
+	sw $t1, 12($s6)
+	sw $t1, 16($s6)
+	sw $t1, 128($s6)
+	sw $t1, 144($s6)
+	sw $t1, 256($s6)
+	sw $t1, 272($s6)
+	sw $t1, 384($s6)
+	sw $t1, 400($s6)
+	sw $t1, 512($s6)
+	sw $t1, 528($s6)
+	sw $t1, 640($s6)
+	sw $t1, 656($s6)
+	sw $t1, 768($s6)
+	sw $t1, 784($s6)
+	sw $t1, 772($s6)
+	sw $t1, 776($s6)
+	sw $t1, 780($s6)
+	
+	jal Check_second
+	
+	
+	
+
+Second_zero:
+	
+	
+	sw $t1, 0($s7)
+	sw $t1, 4($s7)
+	sw $t1, 8($s7)
+	sw $t1, 12($s7)
+	sw $t1, 16($s7)
+	sw $t1, 128($s7)
+	sw $t1, 144($s7)
+	sw $t1, 256($s7)
+	sw $t1, 272($s7)
+	sw $t1, 384($s7)
+	sw $t1, 400($s7)
+	sw $t1, 512($s7)
+	sw $t1, 528($s7)
+	sw $t1, 640($s7)
+	sw $t1, 656($s7)
+	sw $t1, 768($s7)
+	sw $t1, 784($s7)
+	sw $t1, 772($s7)
+	sw $t1, 776($s7)
+	sw $t1, 780($s7)
+	
+	li $v0, 10
+	syscall
+	
+	
+
+	
+#1
+First_one:
+	sw $t1, 8($s6)
+	sw $t1, 136($s6)
+	sw $t1, 264($s6)
+	sw $t1, 392($s6)
+	sw $t1, 520($s6)
+	sw $t1, 648($s6)
+	sw $t1, 776($s6)
+	
+	jal Check_second
+	
+Second_one:
+	sw $t1, 8($s7)
+	sw $t1, 136($s7)
+	sw $t1, 264($s7)
+	sw $t1, 392($s7)
+	sw $t1, 520($s7)
+	sw $t1, 648($s7)
+	sw $t1, 776($s7)
+	
+	li $v0, 10
+	syscall
+
+
+#2
+First_two:
+	sw $t1, 0($s6)
+	sw $t1, 4($s6)
+	sw $t1, 8($s6)
+	sw $t1, 12($s6)
+	sw $t1, 16($s6)
+	#sw $t1, 128($s6)
+	sw $t1, 144($s6)
+	#sw $t1, 256($s6)
+	sw $t1, 272($s6)
+	sw $t1, 384($s6)
+	sw $t1, 388($s6)
+	sw $t1, 392($s6)
+	sw $t1, 396($s6)
+	sw $t1, 400($s6)
+	sw $t1, 512($s6)
+	#sw $t1, 528($s6)
+	sw $t1, 640($s6)
+	#sw $t1, 656($s6)
+	sw $t1, 768($s6)
+	sw $t1, 784($s6)
+	sw $t1, 772($s6)
+	sw $t1, 776($s6)
+	sw $t1, 780($s6)
+	
+	jal Check_second
+
+Second_two:
+	sw $t1, 0($s7)
+	sw $t1, 4($s7)
+	sw $t1, 8($s7)
+	sw $t1, 12($s7)
+	sw $t1, 16($s7)
+	#sw $t1, 128($s6)
+	sw $t1, 144($s7)
+	#sw $t1, 256($s6)
+	sw $t1, 272($s7)
+	sw $t1, 384($s7)
+	sw $t1, 388($s7)
+	sw $t1, 392($s7)
+	sw $t1, 396($s7)
+	sw $t1, 400($s7)
+	sw $t1, 512($s7)
+	#sw $t1, 528($s6)
+	sw $t1, 640($s7)
+	#sw $t1, 656($s6)
+	sw $t1, 768($s7)
+	sw $t1, 784($s7)
+	sw $t1, 772($s7)
+	sw $t1, 776($s7)
+	sw $t1, 780($s7)
+	
+	li $v0, 10
+	syscall
+
+#3
+First_three:
+	sw $t1, 0($s6)
+	sw $t1, 4($s6)
+	sw $t1, 8($s6)
+	sw $t1, 12($s6)
+	sw $t1, 16($s6)
+	#sw $t1, 128($s6)
+	sw $t1, 144($s6)
+	#sw $t1, 256($s6)
+	sw $t1, 272($s6)
+	sw $t1, 384($s6)
+	sw $t1, 388($s6)
+	sw $t1, 392($s6)
+	sw $t1, 396($s6)
+	sw $t1, 400($s6)
+	#sw $t1, 512($s6)
+	sw $t1, 528($s6)
+	#sw $t1, 640($s6)
+	sw $t1, 656($s6)
+	sw $t1, 768($s6)
+	sw $t1, 784($s6)
+	sw $t1, 772($s6)
+	sw $t1, 776($s6)
+	sw $t1, 780($s6)
+	
+	jal Check_second
+	
+Second_three:
+	sw $t1, 0($s7)
+	sw $t1, 4($s7)
+	sw $t1, 8($s7)
+	sw $t1, 12($s7)
+	sw $t1, 16($s7)
+	#sw $t1, 128($s6)
+	sw $t1, 144($s7)
+	#sw $t1, 256($s6)
+	sw $t1, 272($s7)
+	sw $t1, 384($s7)
+	sw $t1, 388($s7)
+	sw $t1, 392($s7)
+	sw $t1, 396($s7)
+	sw $t1, 400($s7)
+	#sw $t1, 512($s6)
+	sw $t1, 528($s7)
+	#sw $t1, 640($s6)
+	sw $t1, 656($s7)
+	sw $t1, 768($s7)
+	sw $t1, 784($s7)
+	sw $t1, 772($s7)
+	sw $t1, 776($s7)
+	sw $t1, 780($s7)
+	
+	li $v0, 10
+	syscall
+	
+#4
+First_four:
+	sw $t1, 0($s6)
+	sw $t1, 8($s6)
+	#sw $t1, 12($s6)
+	#sw $t1, 16($s6)
+	sw $t1, 128($s6)
+	#sw $t1, 144($s6)
+	sw $t1, 256($s6)
+	#sw $t1, 272($s6)
+	sw $t1, 384($s6)
+	sw $t1, 388($s6)
+	sw $t1, 392($s6)
+	sw $t1, 396($s6)
+	sw $t1, 400($s6)
+	#sw $t1, 512($s6)
+	#sw $t1, 528($s6)
+	#sw $t1, 640($s6)
+	#sw $t1, 656($s6)
+	#sw $t1, 768($s6)
+	#sw $t1, 784($s6)
+	#sw $t1, 772($s6)
+	#sw $t1, 776($s6)
+	#sw $t1, 780($s6)
+	sw $t1, 136($s6)
+	sw $t1, 264($s6)
+	sw $t1, 392($s6)
+	sw $t1, 520($s6)
+	sw $t1, 648($s6)
+	sw $t1, 776($s6)
+	
+	jal Check_second
+	
+Second_four:
+	sw $t1, 0($s7)
+	sw $t1, 8($s7)
+	#sw $t1, 12($s6)
+	#sw $t1, 16($s6)
+	sw $t1, 128($s7)
+	#sw $t1, 144($s6)
+	sw $t1, 256($s7)
+	#sw $t1, 272($s6)
+	sw $t1, 384($s7)
+	sw $t1, 388($s7)
+	sw $t1, 392($s7)
+	sw $t1, 396($s7)
+	sw $t1, 400($s7)
+	#sw $t1, 512($s6)
+	#sw $t1, 528($s6)
+	#sw $t1, 640($s6)
+	#sw $t1, 656($s6)
+	#sw $t1, 768($s6)
+	#sw $t1, 784($s6)
+	#sw $t1, 772($s6)
+	#sw $t1, 776($s6)
+	#sw $t1, 780($s6)
+	sw $t1, 136($s7)
+	sw $t1, 264($s7)
+	sw $t1, 392($s7)
+	sw $t1, 520($s7)
+	sw $t1, 648($s7)
+	sw $t1, 776($s7)
+	
+	li $v0, 10
+	syscall
+#5	
+First_five:
+	sw $t1, 0($s6)
+	sw $t1, 4($s6)
+	sw $t1, 8($s6)
+	sw $t1, 12($s6)
+	sw $t1, 16($s6)
+	sw $t1, 128($s6)
+	#sw $t1, 144($s6)
+	sw $t1, 256($s6)
+	#sw $t1, 272($s6)
+	sw $t1, 384($s6)
+	sw $t1, 388($s6)
+	sw $t1, 392($s6)
+	sw $t1, 396($s6)
+	sw $t1, 400($s6)
+	#sw $t1, 512($s6)
+	sw $t1, 528($s6)
+	#sw $t1, 640($s6)
+	sw $t1, 656($s6)
+	sw $t1, 768($s6)
+	sw $t1, 784($s6)
+	sw $t1, 772($s6)
+	sw $t1, 776($s6)
+	sw $t1, 780($s6)
+	
+	jal Check_second
+
+Second_five:
+	sw $t1, 0($s7)
+	sw $t1, 4($s7)
+	sw $t1, 8($s7)
+	sw $t1, 12($s7)
+	sw $t1, 16($s7)
+	sw $t1, 128($s7)
+	#sw $t1, 144($s6)
+	sw $t1, 256($s7)
+	#sw $t1, 272($s6)
+	sw $t1, 384($s7)
+	sw $t1, 388($s7)
+	sw $t1, 392($s7)
+	sw $t1, 396($s7)
+	sw $t1, 400($s7)
+	#sw $t1, 512($s6)
+	sw $t1, 528($s7)
+	#sw $t1, 640($s6)
+	sw $t1, 656($s7)
+	sw $t1, 768($s7)
+	sw $t1, 784($s7)
+	sw $t1, 772($s7)
+	sw $t1, 776($s7)
+	sw $t1, 780($s7)
+	
+	li $v0, 10
+	syscall
+
+#6
+First_six:
+	sw $t1, 0($s6)
+	sw $t1, 4($s6)
+	sw $t1, 8($s6)
+	sw $t1, 12($s6)
+	sw $t1, 16($s6)
+	sw $t1, 128($s6)
+	#sw $t1, 144($s6)
+	sw $t1, 256($s6)
+	#sw $t1, 272($s6)
+	sw $t1, 384($s6)
+	sw $t1, 388($s6)
+	sw $t1, 392($s6)
+	sw $t1, 396($s6)
+	sw $t1, 400($s6)
+	sw $t1, 512($s6)
+	sw $t1, 528($s6)
+	sw $t1, 640($s6)
+	sw $t1, 656($s6)
+	sw $t1, 768($s6)
+	sw $t1, 784($s6)
+	sw $t1, 772($s6)
+	sw $t1, 776($s6)
+	sw $t1, 780($s6)
+	
+	jal Check_second
+	
+Second_six:
+	sw $t1, 0($s7)
+	sw $t1, 4($s7)
+	sw $t1, 8($s7)
+	sw $t1, 12($s7)
+	sw $t1, 16($s7)
+	sw $t1, 128($s7)
+	#sw $t1, 144($s6)
+	sw $t1, 256($s7)
+	#sw $t1, 272($s6)
+	sw $t1, 384($s7)
+	sw $t1, 388($s7)
+	sw $t1, 392($s7)
+	sw $t1, 396($s7)
+	sw $t1, 400($s7)
+	sw $t1, 512($s7)
+	sw $t1, 528($s7)
+	sw $t1, 640($s7)
+	sw $t1, 656($s7)
+	sw $t1, 768($s7)
+	sw $t1, 784($s7)
+	sw $t1, 772($s7)
+	sw $t1, 776($s7)
+	sw $t1, 780($s7)
+	
+	li $v0, 10
+	syscall
+	
+#7
+First_seven:
+	sw $t1, 0($s6)
+	sw $t1, 4($s6)
+	sw $t1, 8($s6)
+	sw $t1, 12($s6)
+	sw $t1, 16($s6)
+	#sw $t1, 128($s6)
+	sw $t1, 144($s6)
+	#sw $t1, 256($s6)
+	sw $t1, 272($s6)
+	#sw $t1, 384($s6)
+	sw $t1, 400($s6)
+	#sw $t1, 512($s6)
+	sw $t1, 528($s6)
+	#sw $t1, 640($s6)
+	sw $t1, 656($s6)
+	#sw $t1, 768($s6)
+	#sw $t1, 784($s6)
+	#sw $t1, 772($s6)
+	#sw $t1, 776($s6)
+	sw $t1, 784($s6)
+	
+	jal Check_second
+	
+Second_seven:
+	sw $t1, 0($s7)
+	sw $t1, 4($s7)
+	sw $t1, 8($s7)
+	sw $t1, 12($s7)
+	sw $t1, 16($s7)
+	#sw $t1, 128($s6)
+	sw $t1, 144($s7)
+	#sw $t1, 256($s6)
+	sw $t1, 272($s7)
+	#sw $t1, 384($s6)
+	sw $t1, 400($s7)
+	#sw $t1, 512($s6)
+	sw $t1, 528($s7)
+	#sw $t1, 640($s6)
+	sw $t1, 656($s7)
+	#sw $t1, 768($s6)
+	#sw $t1, 784($s6)
+	#sw $t1, 772($s6)
+	#sw $t1, 776($s6)
+	sw $t1, 784($s7)
+	
+	li $v0, 10
+	syscall
+
+#8
+First_eight:
+	sw $t1, 0($s6)
+	sw $t1, 4($s6)
+	sw $t1, 8($s6)
+	sw $t1, 12($s6)
+	sw $t1, 16($s6)
+	sw $t1, 128($s6)
+	sw $t1, 144($s6)
+	sw $t1, 256($s6)
+	sw $t1, 272($s6)
+	sw $t1, 384($s6)
+	sw $t1, 388($s6)
+	sw $t1, 392($s6)
+	sw $t1, 396($s6)
+	sw $t1, 400($s6)
+	sw $t1, 512($s6)
+	sw $t1, 528($s6)
+	sw $t1, 640($s6)
+	sw $t1, 656($s6)
+	sw $t1, 768($s6)
+	sw $t1, 784($s6)
+	sw $t1, 772($s6)
+	sw $t1, 776($s6)
+	sw $t1, 780($s6)
+	
+	jal Check_second
+	
+
+Second_eight:
+	sw $t1, 0($s7)
+	sw $t1, 4($s7)
+	sw $t1, 8($s7)
+	sw $t1, 12($s7)
+	sw $t1, 16($s7)
+	sw $t1, 128($s7)
+	sw $t1, 144($s7)
+	sw $t1, 256($s7)
+	sw $t1, 272($s7)
+	sw $t1, 384($s7)
+	sw $t1, 388($s7)
+	sw $t1, 392($s7)
+	sw $t1, 396($s7)
+	sw $t1, 400($s7)
+	sw $t1, 512($s7)
+	sw $t1, 528($s7)
+	sw $t1, 640($s7)
+	sw $t1, 656($s7)
+	sw $t1, 768($s7)
+	sw $t1, 784($s7)
+	sw $t1, 772($s7)
+	sw $t1, 776($s7)
+	sw $t1, 780($s7)
+	
+	li $v0, 10
+	syscall
+	
+#9
+First_nine:
+	sw $t1, 0($s6)
+	sw $t1, 4($s6)
+	sw $t1, 8($s6)
+	sw $t1, 12($s6)
+	sw $t1, 16($s6)
+	sw $t1, 128($s6)
+	sw $t1, 144($s6)
+	sw $t1, 256($s6)
+	sw $t1, 272($s6)
+	sw $t1, 384($s6)
+	sw $t1, 388($s6)
+	sw $t1, 392($s6)
+	sw $t1, 396($s6)
+	sw $t1, 400($s6)
+	#sw $t1, 512($s6)
+	sw $t1, 528($s6)
+	#sw $t1, 640($s6)
+	sw $t1, 656($s6)
+	#sw $t1, 768($s6)
+	#sw $t1, 784($s6)
+	#sw $t1, 772($s6)
+	#sw $t1, 776($s6)
+	sw $t1, 784($s6)
+	
+	jal Check_second
+	
+
+Second_nine:
+	sw $t1, 0($s7)
+	sw $t1, 4($s7)
+	sw $t1, 8($s7)
+	sw $t1, 12($s7)
+	sw $t1, 16($s7)
+	sw $t1, 128($s7)
+	sw $t1, 144($s7)
+	sw $t1, 256($s7)
+	sw $t1, 272($s7)
+	sw $t1, 384($s7)
+	sw $t1, 388($s7)
+	sw $t1, 392($s7)
+	sw $t1, 396($s7)
+	sw $t1, 400($s7)
+	#sw $t1, 512($s7)
+	sw $t1, 528($s7)
+	#sw $t1, 640($s7)
+	sw $t1, 656($s7)
+	#sw $t1, 768($s7)
+	#sw $t1, 784($s7)
+	#sw $t1, 772($s7)
+	#sw $t1, 776($s7)
+	sw $t1, 784($s7)
+	
+	li $v0, 10
+	syscall
